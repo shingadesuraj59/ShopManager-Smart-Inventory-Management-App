@@ -1,6 +1,6 @@
-import Joi from "joi"; // Correctly capitalized 'Joi'
+import Joi from "joi"; 
 
-// Server-side validation for signup
+
 const signupValidation = async (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(100).required(),
