@@ -5,6 +5,7 @@ import { FiCalendar, FiMenu } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
+
 const ShowBill = () => {
   const { fetchBill, bill } = useContext(StoreContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

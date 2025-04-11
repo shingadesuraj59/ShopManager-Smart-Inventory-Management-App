@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 import axios from "axios";
 import { FiMail, FiLock, FiLogIn, FiUserPlus } from 'react-icons/fi';
+import { StoreContext } from '../Context/StoreContext';
+
+
 
 const Login = () => {
+  const {backend_url,token,setToken} = useContext(StoreContext);
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: ""
@@ -31,12 +35,13 @@ const Login = () => {
   
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/login", loginInfo);
+      const response = await axios.post(backend_url+"/api/login", loginInfo);
       const { success, message, jwttoken, name } = response.data;
   
       if (success) {
         handleSuccess(message || "Login successful!");
         localStorage.setItem("token", jwttoken);
+        setToken(localStorage.getItem("token"));
         localStorage.setItem("loggedInUser", name);
         setTimeout(() => {
           navigate("/home");

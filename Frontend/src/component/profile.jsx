@@ -3,17 +3,17 @@ import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 import 'react-toastify/dist/ReactToastify.css';
-import { FiUser, FiPhone, FiMail, FiClock, FiEdit2, FiCheck } from 'react-icons/fi';
+import { FiUser, FiPhone, FiMail, FiEdit2, FiCheck } from 'react-icons/fi';
+import { useContext } from 'react';
+import { StoreContext } from '../Context/StoreContext';
 
 const Profile = () => {
+  const { backend_url, token } = useContext(StoreContext);
   const [profile, setProfile] = useState({
     businessName: '',
     phoneNumber: '',
-    otp: '',
     email: ''
   });
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpTimer, setOtpTimer] = useState(60);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -22,14 +22,16 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/profile', {
+        const response = await axios.get(backend_url + '/api/profile', {
           headers: {
-            Authorization: localStorage.getItem('token')
+            Authorization: token
           }
         });
+
+        console.log('bac',response.data.user);
         setCurrentUser(response.data.user);
         setProfile({
-          businessName: response.data.user.businessName || '',
+          businessName: response.data.user.name || '',
           phoneNumber: response.data.user.phoneNumber || '',
           email: response.data.user.email || ''
         });
@@ -39,7 +41,7 @@ const Profile = () => {
     };
     
     fetchProfile();
-  }, []);
+  }, [backend_url, token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,32 +58,16 @@ const Profile = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/profile/send-otp',
-        { phoneNumber: profile.phoneNumber },
-        { headers: { Authorization: localStorage.getItem('token') } }
-      );
-      handleSuccess(response.data.message);
-      setOtpSent(true);
-      setOtpTimer(60);
-    } catch (error) {
-      handleError(error.response?.data?.message || 'Error sending OTP');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await axios.put(
-        'http://localhost:3000/api/profile',
-        profile,
-        { headers: { Authorization: localStorage.getItem('token') } }
+        backend_url + '/api/manage-profile',
+        {
+          businessName: profile.businessName,
+          phoneNumber: profile.phoneNumber
+          // Don't send email as it shouldn't be changed
+        },
+        { headers: { Authorization: token } }
       );
       handleSuccess('Profile updated successfully!');
       setCurrentUser(response.data.user);
-      setOtpSent(false);
       setEditMode(false);
     } catch (error) {
       handleError(error.response?.data?.message || 'Error updating profile');
@@ -89,15 +75,6 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (otpSent && otpTimer > 0) {
-      const timer = setInterval(() => setOtpTimer(prev => prev - 1), 1000);
-      return () => clearInterval(timer);
-    } else if (otpTimer === 0) {
-      setOtpSent(false);
-    }
-  }, [otpSent, otpTimer]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -131,7 +108,7 @@ const Profile = () => {
             </div>
 
             {editMode ? (
-              <form onSubmit={otpSent ? handleVerifyOtp : handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -164,10 +141,9 @@ const Profile = () => {
                         type="email"
                         name="email"
                         value={profile.email}
-                        onChange={handleChange}
-                        className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                        readOnly
+                        className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                         placeholder="your@email.com"
-                        required
                       />
                     </div>
                   </div>
@@ -188,40 +164,15 @@ const Profile = () => {
                         className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="9876543210"
                         required
-                        disabled={otpSent}
                       />
                     </div>
                   </div>
                 </div>
 
-                {otpSent && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      OTP Verification ({otpTimer}s remaining)
-                    </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <FiClock className="text-gray-400" />
-                      </div>
-                      <input
-                        name="otp"
-                        value={profile.otp}
-                        onChange={handleChange}
-                        className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                        placeholder="Enter 6-digit OTP"
-                        required
-                      />
-                    </div>
-                  </div>
-                )}
-
                 <div className="flex justify-end space-x-4 pt-4">
                   <button
                     type="button"
-                    onClick={() => {
-                      setEditMode(false);
-                      setOtpSent(false);
-                    }}
+                    onClick={() => setEditMode(false)}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
@@ -233,12 +184,10 @@ const Profile = () => {
                   >
                     {loading ? (
                       'Processing...'
-                    ) : otpSent ? (
-                      <>
-                        <FiCheck className="inline mr-1" /> Verify & Save
-                      </>
                     ) : (
-                      'Send OTP'
+                      <>
+                        <FiCheck className="inline mr-1" /> Save Changes
+                      </>
                     )}
                   </button>
                 </div>
@@ -249,7 +198,7 @@ const Profile = () => {
                   <div>
                     <p className="text-sm text-gray-500">Business Name</p>
                     <p className="text-gray-900 font-medium mt-1">
-                      {currentUser?.businessName || 'Not provided'}
+                      {currentUser?.name || 'Not provided'}
                     </p>
                   </div>
                   <div>

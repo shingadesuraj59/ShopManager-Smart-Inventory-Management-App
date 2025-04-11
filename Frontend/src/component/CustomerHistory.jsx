@@ -5,7 +5,7 @@ import { StoreContext } from '../Context/StoreContext';
 
 const CustomerHistory = () => {
   const { customerId } = useParams();
-  const { fetchBill, bill, updateBill } = useContext(StoreContext);
+  const { fetchBill, bill, updateBill ,backend_url,token} = useContext(StoreContext);
   const [customerBills, setCustomerBills] = useState([]);
   const [customerInfo, setCustomerInfo] = useState(null);
   const [editModal, setEditModal] = useState(false);

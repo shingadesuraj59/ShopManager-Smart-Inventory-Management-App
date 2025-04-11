@@ -7,7 +7,7 @@ import { StoreContext } from '../Context/StoreContext';
 import { useContext } from 'react';
 
 const CustomerAccount = () => {
-    const { fetchCustomers, customerData } = useContext(StoreContext);
+    const { fetchCustomers, customerData,backend_url,token} = useContext(StoreContext);
     const [showAddForm, setShowAddForm] = useState(false);
     const [newCustomer, setNewCustomer] = useState({
         customerName: '',
@@ -57,9 +57,8 @@ const CustomerAccount = () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
             await axios.post(
-                'http://localhost:3000/api/customer/add',
+                backend_url+'/api/customer/add',
                 newCustomer,
                 { headers: { Authorization: token } }
             );

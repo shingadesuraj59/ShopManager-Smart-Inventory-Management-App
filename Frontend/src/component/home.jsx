@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { handleError } from '../utils';
 import axios from 'axios';  // Make sure axios is imported
+import { StoreContext } from '../Context/StoreContext';
 
 const Home = () => {
+   const {backend_url} = useContext(StoreContext);
   const [userinfo, setuserinfo] = useState("");
   const [product, setproduct] = useState([]);
   const navigate = useNavigate();
@@ -13,7 +15,7 @@ const Home = () => {
   }, []);
     
   const fetchdata = async () => {
-    const url = "http://localhost:3000/api/";  // Correct URL
+    const url = backend_url+"/api/";  // Correct URL
     const headers = {
       headers: {
         "Authorization": localStorage.getItem("token")

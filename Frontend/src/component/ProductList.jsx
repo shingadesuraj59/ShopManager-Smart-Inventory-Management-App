@@ -4,8 +4,12 @@ import { FiSearch, FiShoppingCart, FiStar, FiAlertTriangle } from 'react-icons/f
 import { motion } from 'framer-motion';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useContext } from 'react';
+import { StoreContext } from '../Context/StoreContext';
+
 
 const ProductList = () => {
+  const {backend_url,token} = useContext(StoreContext);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -15,10 +19,10 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const url = 'http://localhost:3000/api/products';
+        const url = backend_url+'/api/products';
         const headers = {
           headers: {
-            Authorization: localStorage.getItem('token'),
+            Authorization: token,
           },
         };
         

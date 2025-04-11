@@ -4,8 +4,11 @@ import { handleError, handleSuccess } from '../utils';
 import { ToastContainer } from 'react-toastify';
 import { FiPlus, FiSearch, FiEdit2, FiTrash2, FiX, FiCheck, FiPrinter, FiDownload, FiBox } from 'react-icons/fi';
 import 'react-toastify/dist/ReactToastify.css';
+import { useContext } from 'react';
+import { StoreContext } from '../Context/StoreContext';
 
 function InventoryManager() {
+    const {backend_url,token} = useContext(StoreContext);
     const [products, setProducts] = useState([]);
     const [newProduct, setNewProduct] = useState({
         name: '',
@@ -37,10 +40,10 @@ function InventoryManager() {
     }, []);
 
     const fetchProducts = () => {
-        const url = 'http://localhost:3000/api/inventory/list';
+        const url = backend_url+'/api/inventory/list';
         const headers = {
             headers: {
-                "Authorization": localStorage.getItem("token")
+                "Authorization":token
             }
         };
         axios.get(url, headers)
@@ -56,10 +59,10 @@ function InventoryManager() {
             dateAdded: getCurrentDate(),
         };
 
-        const url = 'http://localhost:3000/api/inventory/add';
+        const url = backend_url+'/api/inventory/add';
         const headers = {
             headers: {
-                "Authorization": localStorage.getItem("token")
+                "Authorization":token
             }
         };
         axios.post(url, productWithDate, headers)
@@ -98,10 +101,10 @@ function InventoryManager() {
             sellingPrice: parseFloat(sellingPrice),
             dateUpdated: new Date().toLocaleDateString(),
         };
-        const url = `http://localhost:3000/api/inventory/update-product/${id}`;
+        const url = backend_url+`/api/inventory/update-product/${id}`;
         const headers = {
             headers: {
-                "Authorization": localStorage.getItem("token")
+                "Authorization": token
             }
         };
         axios.put(url, updatedProduct, headers)
@@ -127,10 +130,10 @@ function InventoryManager() {
     };
 
     const deleteProduct = (id) => {
-        const url = `http://localhost:3000/api/inventory/delete/${id}`;
+        const url = backend_url+`/api/inventory/delete/${id}`;
         const headers = {
             headers: {
-                "Authorization": localStorage.getItem("token")
+                "Authorization": token
             }
         };
 

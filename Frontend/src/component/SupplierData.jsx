@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import { StoreContext } from '../Context/StoreContext';
 
 const SupplierForm = () => {
+  const {backend_url,token} = useContext(StoreContext);
   // State management
   const [suppliers, setSuppliers] = useState([]);
   const [filteredSuppliers, setFilteredSuppliers] = useState([]);
@@ -18,9 +21,9 @@ const SupplierForm = () => {
   // Fetch all suppliers
   const fetchSuppliers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/supplier/suppliers', {
+      const response = await axios.get(backend_url+'/api/supplier/suppliers', {
         headers: {
-          Authorization: localStorage.getItem('token')
+          Authorization:token
         }
       });
       setSuppliers(response.data.suppliers);
@@ -81,9 +84,9 @@ const SupplierForm = () => {
         data.append('image', formData.image);
       }
 
-      await axios.post('http://localhost:3000/api/supplier/supplier-data', data, {
+      await axios.post(backend_url+'/api/supplier/supplier-data', data, {
         headers: {
-          Authorization: localStorage.getItem('token'),
+          Authorization: token,
           'Content-Type': 'multipart/form-data'
         }
       });

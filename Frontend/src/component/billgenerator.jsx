@@ -10,7 +10,7 @@ import { StoreContext } from '../Context/StoreContext.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 
 function BillGenerator() {
-    const { fetchCustomers, customerData } = useContext(StoreContext);
+    const { fetchCustomers, customerData,backend_url,token} = useContext(StoreContext);
     const [products, setProducts] = useState([]);
     const [items, setItems] = useState([]);
     const [customerName, setCustomerName] = useState('');
@@ -55,10 +55,10 @@ function BillGenerator() {
     const fetchProducts = async () => {
         setIsLoading(true);
         try {
-            const url = 'http://localhost:3000/api/inventory/list';
+            const url =backend_url+'/api/inventory/list';
             const headers = {
                 headers: {
-                    "Authorization": localStorage.getItem("token")
+                    "Authorization":token
                 }
             };
             const response = await axios.get(url, headers);
@@ -177,7 +177,7 @@ function BillGenerator() {
         setIsLoading(true);
 
         try {
-            const url = 'http://localhost:3000/api/bill/create';
+            const url =backend_url+'/api/bill/create';
             const headers = {
                 headers: {
                     "Authorization": localStorage.getItem("token")

@@ -4,8 +4,11 @@ import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
 import axios from "axios";
 import { FiUser, FiMail, FiPhone, FiLock, FiArrowRight } from 'react-icons/fi';
+import { useContext } from 'react';
+import { StoreContext } from '../Context/StoreContext';
 
 const Signup = () => {
+  const {backend_url} = useContext(StoreContext);
   const [signinfo, setSigninfo] = useState({
     name: "",
     email: "",
@@ -39,7 +42,7 @@ const Signup = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:3000/api/sign-up", signinfo);
+      const response = await axios.post(backend_url+"/api/sign-up", signinfo);
       const { success, message } = response.data;
     
       if (success) {

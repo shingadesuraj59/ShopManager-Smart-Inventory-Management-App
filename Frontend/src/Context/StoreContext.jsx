@@ -9,16 +9,22 @@ export const StoreContext = createContext();
 // Create provider component
 const StoreContextProvider = (props) => {
 
+  const [token,setToken]=useState(localStorage.getItem('token')? localStorage.getItem('token') : null);
+
   const [customerData, setCustomerData] = useState([]);
   const [bill, setBill] = useState([]);
 
+
+  const backend_url=import.meta.env.BACKEND_URL ||'http://localhost:3000';
+
+  
 
   // Fetch customers
   // Fetch customers
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:3000/api/customer/all', {
+      const response = await axios.get(backend_url+'/api/customer/all', {
         headers: { Authorization: token }
       });
       setCustomerData(response.data);
@@ -29,7 +35,7 @@ const StoreContextProvider = (props) => {
 
   const fetchBill = async () => {
     
-    const url = 'http://localhost:3000/api/bill/getbill'; // Correct URL
+    const url = backend_url+'/api/bill/getbill'; // Correct URL
     const headers = {
       headers: {
         Authorization: localStorage.getItem('token'),
@@ -53,7 +59,7 @@ const StoreContextProvider = (props) => {
         history: updatedData.deposit,
       };
 
-      const response = await axios.put(`http://localhost:3000/api/bill/update/${billId}`, updateData, {
+      const response = await axios.put(backend_url+`/api/bill/update/${billId}`, updateData, {
         headers: { Authorization: token }
       });
       setBill(response.data);
@@ -81,6 +87,9 @@ const StoreContextProvider = (props) => {
     fetchBill,
     bill,
     updateBill,
+    backend_url,
+    token,
+    setToken,
 
   }
 
