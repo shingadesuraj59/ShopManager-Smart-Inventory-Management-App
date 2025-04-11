@@ -18,6 +18,8 @@ const SupplierForm = () => {
     image: null
   });
 
+ 
+
   // Fetch all suppliers
   const fetchSuppliers = async () => {
     try {
@@ -110,6 +112,12 @@ const SupplierForm = () => {
       setLoading(false);
     }
   };
+
+
+  console.log("suppliers",suppliers)
+
+
+
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -260,23 +268,15 @@ const SupplierForm = () => {
                             <>
                               <img
                                 className="h-10 w-10 rounded-full object-cover"
-                                src={`http://localhost:3000${supplier.imageUrl}`}
+                                src={`${supplier.imageUrl}`}
                                 alt={supplier.supplierName}
-                                onError={(e) => {
-                                  e.target.onerror = null;
-                                  e.target.src = 'https://via.placeholder.com/150';
-                                }}
                               />
                               <div className="hidden group-hover:block absolute z-10 top-full left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                                 <div className="p-2">
                                   <img
                                     className="w-full h-auto rounded"
-                                    src={`http://localhost:3000${supplier.imageUrl}`}
+                                    src={`${supplier.imageUrl}`}
                                     alt={supplier.supplierName}
-                                    onError={(e) => {
-                                      e.target.onerror = null;
-                                      e.target.src = 'https://via.placeholder.com/150';
-                                    }}
                                   />
                                 </div>
                               </div>

@@ -4,8 +4,6 @@ import User from "../models/User.js";
 dotenv.config();
 
 
-
-
 export const ManageProfile=async(req,res)=>{
 
   try {

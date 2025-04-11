@@ -88,11 +88,6 @@ export const UpdateBill = async (req, res) => {
     const { billId } = req.params;
     const { history } = req.body;
 
-    console.log("Request Body:", req.body);  // Log the request body for debugging
-
-    console.log("History:", history);  // Log the history for debugging
-    console.log("Bill ID:", billId);  // Log the bill ID for debugging
-
     try {
         const bill = await Bill.findById(billId);  // Simplified findById call
 
