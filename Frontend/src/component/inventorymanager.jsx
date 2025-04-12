@@ -8,7 +8,7 @@ import { useContext } from 'react';
 import { StoreContext } from '../Context/StoreContext';
 
 function InventoryManager() {
-    const {backend_url,token} = useContext(StoreContext);
+    const { backend_url, token } = useContext(StoreContext);
     const [products, setProducts] = useState([]);
     const [newProduct, setNewProduct] = useState({
         name: '',
@@ -40,10 +40,10 @@ function InventoryManager() {
     }, []);
 
     const fetchProducts = () => {
-        const url = backend_url+'/api/inventory/list';
+        const url = backend_url + '/api/inventory/list';
         const headers = {
             headers: {
-                "Authorization":token
+                "Authorization": token
             }
         };
         axios.get(url, headers)
@@ -59,10 +59,10 @@ function InventoryManager() {
             dateAdded: getCurrentDate(),
         };
 
-        const url = backend_url+'/api/inventory/add';
+        const url = backend_url + '/api/inventory/add';
         const headers = {
             headers: {
-                "Authorization":token
+                "Authorization": token
             }
         };
         axios.post(url, productWithDate, headers)
@@ -101,7 +101,7 @@ function InventoryManager() {
             sellingPrice: parseFloat(sellingPrice),
             dateUpdated: new Date().toLocaleDateString(),
         };
-        const url = backend_url+`/api/inventory/update-product/${id}`;
+        const url = backend_url + `/api/inventory/update-product/${id}`;
         const headers = {
             headers: {
                 "Authorization": token
@@ -130,7 +130,7 @@ function InventoryManager() {
     };
 
     const deleteProduct = (id) => {
-        const url = backend_url+`/api/inventory/delete/${id}`;
+        const url = backend_url + `/api/inventory/delete/${id}`;
         const headers = {
             headers: {
                 "Authorization": token
@@ -204,28 +204,31 @@ function InventoryManager() {
         <div className="min-h-screen bg-gray-50 p-4 md:p-8">
             <div className="max-w-7xl mx-auto">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                    <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Inventory Management</h1>
-                        <p className="text-gray-600 mt-1">Manage your products and stock levels</p>
+                <div className="flex flex-col justify-between gap-4 mb-8 sm:flex-row sm:items-center">
+                    <div className="flex-1 min-w-0">
+                        <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">Inventory Management</h1>
+                        <p className="text-gray-600 truncate">Manage your products and stock levels</p>
                     </div>
-                    <div className="flex space-x-3 mt-4 md:mt-0">
-                        <div className="relative">
-                            <FiSearch className="absolute left-3 top-3 text-gray-400" />
+
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                        <div className="relative flex-1">
+                            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="Search products..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                             />
                         </div>
+
                         <button
                             onClick={() => setShowAddForm(!showAddForm)}
-                            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all whitespace-nowrap"
                         >
                             <FiPlus className="mr-2" />
-                            Add Product
+                            <span className="hidden xs:inline">Add Product</span>
+                            <span className="inline xs:hidden">Add</span>
                         </button>
                     </div>
                 </div>
@@ -328,11 +331,10 @@ function InventoryManager() {
                                                 ₹{product.sellingPrice}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                    product.quantity <= product.reorderLevel 
-                                                        ? 'bg-red-100 text-red-800' 
-                                                        : 'bg-green-100 text-green-800'
-                                                }`}>
+                                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.quantity <= product.reorderLevel
+                                                    ? 'bg-red-100 text-red-800'
+                                                    : 'bg-green-100 text-green-800'
+                                                    }`}>
                                                     {product.quantity}
                                                 </span>
                                             </td>
@@ -400,9 +402,9 @@ function InventoryManager() {
                                 </button>
                             </div>
                             <div className="flex flex-col items-center">
-                                <img 
-                                    src={getQRCodeUrl(selectedProduct)} 
-                                    alt="QR Code" 
+                                <img
+                                    src={getQRCodeUrl(selectedProduct)}
+                                    alt="QR Code"
                                     className="w-48 h-48 mb-4 border border-gray-200 p-2"
                                 />
                                 <div className="text-sm text-gray-600 mb-4">

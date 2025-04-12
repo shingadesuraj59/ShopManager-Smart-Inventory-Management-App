@@ -15,7 +15,7 @@ const StoreContextProvider = (props) => {
   const [bill, setBill] = useState([]);
 
 
-  const backend_url=import.meta.env.BACKEND_URL ||'http://localhost:3000';
+  const backend_url="https://smart-inventory-management-system-backend.vercel.app"
 
   
 

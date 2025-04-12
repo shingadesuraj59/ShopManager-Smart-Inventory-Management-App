@@ -44,12 +44,13 @@ const Navbar = ({ isAuthenticated, setIsAuthenticated }) => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span 
-                onClick={() => navigate('/')} 
-                className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent cursor-pointer"
-              >
-                ShopManager
-              </span>
+            <span
+  onClick={() => navigate('/')}
+  className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent cursor-pointer transition duration-300 ease-in-out hover:scale-105"
+>
+  ShopManager
+</span>
+
             </div>
           </div>
 
